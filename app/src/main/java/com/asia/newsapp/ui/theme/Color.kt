@@ -2,6 +2,7 @@ package com.asia.newsapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val BackgroundLight = Color(0xFFF6F7F7)
 data class Colors(
     val primary: Color,
     val contentPrimary: Color,
