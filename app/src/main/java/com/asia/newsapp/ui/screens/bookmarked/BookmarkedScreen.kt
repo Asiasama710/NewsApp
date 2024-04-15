@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.asia.newsapp.ui.screens.home.HomeUiEffect
-import com.asia.newsapp.ui.screens.home.composable.NewsItem
+import com.asia.newsapp.ui.screens.home.composable.ArticleItem
 import com.asia.newsapp.ui.theme.LocalNavigationProvider
 import com.asia.newsapp.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
@@ -46,11 +46,13 @@ fun BookmarkedScreenContent(
                 .background(Theme.colors.background)
     ) {
         items(state.articles) { news ->
-            NewsItem(
+            ArticleItem(
                     title = news.title,
                     description = news.description,
                     imageUrl = news.imageUrl,
                     isBookmarked = news.isBookmarked,
+                    author = news.author,
+                    publishedDate = news.publishedAt,
                     onBookmarkedClicked = {  listener.onClickBookMark(news) },
                     onItemClick = {  }
             )

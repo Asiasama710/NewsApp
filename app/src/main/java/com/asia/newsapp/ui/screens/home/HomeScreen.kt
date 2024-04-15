@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -23,9 +21,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.asia.newsapp.ui.screens.home.composable.SearchTextField
 import com.asia.newsapp.ui.theme.LocalNavigationProvider
 import com.asia.newsapp.ui.theme.Theme
-import com.asia.newsapp.ui.screens.home.composable.EmptyScreenItem
-import com.asia.newsapp.ui.screens.home.composable.Loading
-import com.asia.newsapp.ui.screens.home.composable.NewsItem
+import com.asia.newsapp.ui.screens.home.composable.ArticleItem
 import com.asia.newsapp.ui.screens.home.composable.PagingList
 import org.koin.androidx.compose.koinViewModel
 
@@ -74,13 +70,6 @@ fun HomeScreenContent(
                         .fillMaxWidth(),
                     color = Color.Transparent
             )
-//            if (state.isLoading) {
-//                Loading()
-//            }
-//            else if (news.isEmpty()) {
-//                EmptyScreenItem()
-//            }
-//            else {
 
                 PagingList(
                         modifier = Modifier.fillMaxSize(),
@@ -88,16 +77,18 @@ fun HomeScreenContent(
                         hasOptionalList = false,
                         optionalTopLList = emptyList(),
                         optionalHeaderTitle = "",
-                        paddingValues = PaddingValues(16.dp),
+                        paddingValues = PaddingValues(0.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         optionalContent = {},
                         content = { item ->
                             item?.let {
-                                NewsItem(
+                                ArticleItem(
                                         title = it.title,
                                         description = it.description,
                                         imageUrl = it.imageUrl,
                                         isBookmarked = it.isBookmarked,
+                                        author = it.author,
+                                        publishedDate = it.publishedAt,
                                         onBookmarkedClicked = { listener.onClickBookMark(it) },
                                         onItemClick = {  }
                                 )
@@ -105,7 +96,6 @@ fun HomeScreenContent(
                         }
 
                 )
-//            }
         }
     }
 }
