@@ -33,7 +33,7 @@ fun NavGraphBuilder.mainNavGraph(onNavigateToRoot: (Screen) -> Unit) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
         val bottomBar: @Composable () -> Unit = {
-            HRBottomNavigation(
+            BottomNavigation(
                     screens = listOf(
                             Screen.Home,
                             Screen.Bookmarked
