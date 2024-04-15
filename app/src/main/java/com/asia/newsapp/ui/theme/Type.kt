@@ -6,56 +6,54 @@ import androidx.compose.ui.unit.sp
 
 
 val newsTypography = NewsTypography(
+        headlineLarge = TextStyle(
+                fontFamily = PlusJakartaSans,
+                fontSize = 24.sp,
+                lineHeight = 32.4.sp,
+                fontWeight = FontWeight.W600,
+        ),
+        headline = TextStyle(
+                fontFamily = PlusJakartaSans,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.W600,
+        ),
         titleLarge = TextStyle(
                 fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 30.sp,
-                lineHeight = 38.sp
+                fontSize = 16.sp,
+                lineHeight = 20.sp,
+                fontWeight = FontWeight.W600,
+        ),
+        title =TextStyle(
+                fontFamily = PlusJakartaSans,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.W600,
+                lineHeight = 22.sp
         ),
         titleMedium = TextStyle(
                 fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
-                lineHeight = 32.sp
-        ),
-        titleSmall = TextStyle(
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
-                lineHeight = 28.sp
+                fontWeight = FontWeight.W400,
         ),
-        bodyLarge =TextStyle(
+        body = TextStyle(
                 fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
-                lineHeight = 22.sp
+                lineHeight = 19.6.sp,
+                fontWeight = FontWeight.W400,
         ),
-        bodyMedium = TextStyle(
+        caption =TextStyle(
                 fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-                lineHeight = 22.sp
-        ),
-        labelLarge = TextStyle(
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.Normal,
-                fontSize = 12.sp,
-                lineHeight = 20.sp
-        ),
-        labelMedium =TextStyle(
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.W400,
                 fontSize = 12.sp,
                 lineHeight = 15.sp
         ),
 )
 
 data class NewsTypography(
+    val headlineLarge: TextStyle = TextStyle(),
+    val headline: TextStyle = TextStyle(),
     val titleLarge: TextStyle = TextStyle(),
+    val title: TextStyle = TextStyle(),
     val titleMedium: TextStyle = TextStyle(),
-    val titleSmall: TextStyle = TextStyle(),
-    val bodyLarge: TextStyle = TextStyle(),
-    val bodyMedium: TextStyle = TextStyle(),
-    val labelLarge: TextStyle = TextStyle(),
-    val labelMedium: TextStyle = TextStyle(),
+    val body: TextStyle = TextStyle(),
+    val caption: TextStyle = TextStyle(),
 )
