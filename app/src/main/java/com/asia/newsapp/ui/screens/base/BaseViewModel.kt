@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -37,6 +38,18 @@ abstract class BaseViewModel<S, E>(initialState: S) : ViewModel(), KoinComponent
         }
     }
 
+    protected fun <T> tryToCollect(
+        function: suspend () -> Flow<T>,
+        onSuccess: (T) -> Unit,
+        onError: () -> Unit,
+    ): Job {
+        return runWithErrorCheck(onError) {
+            val result = function()
+            result.collectLatest {
+                onSuccess(it)
+            }
+        }
+    }
     protected fun <T> tryToExecute(
         function: suspend () -> T,
         onSuccess: (T) -> Unit,
