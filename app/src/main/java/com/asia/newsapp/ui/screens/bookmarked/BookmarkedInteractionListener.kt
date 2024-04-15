@@ -1,5 +1,7 @@
 package com.asia.newsapp.ui.screens.bookmarked
 
-interface BookmarkedInteractionListener {
+import com.asia.newsapp.ui.screens.home.ArticleUiState
 
+interface BookmarkedInteractionListener {
+    fun onClickBookMark(article: ArticleUiState)
 }
