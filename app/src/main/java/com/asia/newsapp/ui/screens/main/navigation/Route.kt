@@ -15,6 +15,7 @@ sealed class Screen(
     var clearBackStack: Boolean = false,
     val restoreState: Boolean = true,
     val selectedIcon: Int? = null,
+    val title: String? = null,
     val unselectedIcon: Int? = null,
     var args: Bundle? = null
 ) {
@@ -27,11 +28,13 @@ sealed class Screen(
     data object Main : Screen(navigationRouteMain)
     data object Home : Screen(
         route = navigationRouteHome,
+        title = "Home",
         selectedIcon = R.drawable.ic_home_selected,
         unselectedIcon = R.drawable.ic_home_unselected
     )
 
     data object Bookmarked : Screen(
+        title = "Book Marked",
         route = navigationRouteBookmarked,
         selectedIcon = R.drawable.ic_bookmarked_selected,
         unselectedIcon = R.drawable.ic_bookmarked_unselected
