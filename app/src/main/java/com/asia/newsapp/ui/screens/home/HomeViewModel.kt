@@ -1,6 +1,7 @@
 package com.asia.newsapp.ui.screens.home
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -13,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 
 class HomeViewModel(
@@ -34,25 +36,42 @@ class HomeViewModel(
     }
     override fun onClickBookMark(article: ArticleUiState) {
         Log.e("TAG", "onClickBookMark: $article")
+        if (article.isBookmarked){
+            deleteArticle(article)
+        }else{
+            saveArticle(article)
+        }
+    }
+
+    //save in database and change state to true
+    private fun saveArticle(article: ArticleUiState) {
         tryToExecute(
-                function = { updateArticle.updateBookmarkArticle(article.toEntity()) },
-                onSuccess = { onUpdateBookmarkStatusSuccess(article)},
-                onError = ::onError
+                {  updateArticle.saveArticle(article.toEntity()) },
+                { updateBookmarkStatus(article,true) },
+                ::onError
         )
     }
 
-    private fun onUpdateBookmarkStatusSuccess(article: ArticleUiState) {
-        Log.e("TAG", "onUpdateBookmarkStatusSuccess: $article")
+    private fun updateBookmarkStatus(article: ArticleUiState,isBookmarked: Boolean) {
         updateState { it.copy(
                 news = state.value.news.map { articles -> articles.map {articleState->
                     if (articleState.title == article.title) {
-                        articleState.copy(isBookmarked = !articleState.isBookmarked)
+                        articleState.copy(isBookmarked = isBookmarked)
                     } else {
                         articleState
                     }
                 } }
         ) }
     }
+
+    private fun deleteArticle(article: ArticleUiState) {
+        tryToExecute(
+                {  updateArticle.removeArticle(article.toEntity()) },
+                { updateBookmarkStatus(article,false) },
+                ::onError
+        )
+    }
+
     private fun onSearch() {
         updateState { it.copy(isLoading = true, isError = false) }
         searchJob?.cancel()

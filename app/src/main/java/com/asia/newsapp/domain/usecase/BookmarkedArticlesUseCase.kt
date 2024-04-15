@@ -11,14 +11,17 @@ class BookmarkedArticlesUseCase(
 ) {
     suspend fun getBookmarkedArticles(): Flow<List<Article>> {
         return newsRepository.getBookmarkedArticles().map { articles ->
-            articles.filter { article -> article.isBookmarked }
-                .sortedByDescending { articleEntity ->
+            articles.sortedByDescending { articleEntity ->
                     articleEntity.publishedAt
                 }
         }
     }
 
-    suspend fun updateBookmarkArticle(article:Article) {
-        newsRepository.updateBookmarkArticle(article)
+    suspend fun saveArticle(article: Article) {
+        newsRepository.saveArticles(article)
+    }
+
+    suspend fun removeArticle(article: Article) {
+        newsRepository.removeArticle(article)
     }
 }

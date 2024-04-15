@@ -8,7 +8,9 @@ interface NewsRepository {
 
     suspend fun searchForNews(query: String,pageNumber:Int,limit:Int): PaginationItems<Article>
 
-    suspend fun updateBookmarkArticle(article: Article)
-
     suspend fun getBookmarkedArticles(): Flow<List<Article>>
+
+    suspend fun saveArticles(articles: Article)
+
+    suspend fun removeArticle(articles: Article)
 }

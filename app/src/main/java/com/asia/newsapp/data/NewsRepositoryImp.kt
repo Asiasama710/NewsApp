@@ -28,7 +28,7 @@ class NewsRepositoryImp(
         try {
             val response = handleApiResponse(service.searchForNews(query, pageNumber, limit))
             val bookmarkedArticles =
-                getBookmarkedArticles().firstOrNull()?.filter { it.isBookmarked }?.map { it.title } ?: emptyList()
+                getBookmarkedArticles().firstOrNull()?.map { it.title } ?: emptyList()
 
             Log.e("TAG", "bookmarkedArticles: $bookmarkedArticles")
             return response.articles.map { articleDto ->
@@ -49,41 +49,12 @@ class NewsRepositoryImp(
         }
     }
 
-//    override suspend fun searchForNews(query: String, pageNumber: Int, limit: Int): PaginationItems<Article> {
-//        try {
-//            val response = handleApiResponse(service.searchForNews(query, pageNumber, limit))
-//            val articles = getBookmarkedArticles().map { it.map {article-> article.title } }
-//             response.articles.forEach { articleDto->
-//                 val d = articles.filterNot { it.contains(articleDto.title) }
-//                 val f =articles.map { it.contains(articleDto.title) }
-//            }
-//
-//            return response.articles.map { it.toEntity().copy(isBookmarked = true) }.let {articles->
-//                PaginationItems(
-//                        items = articles,
-//                        page = pageNumber,
-//                        total = response.totalResults.toLong(),
-//                )
-//            }
-//
-//        } catch (e: Exception) {
-//            throw NetworkException()
-//        }
-//    }
+    override suspend fun saveArticles(articles: Article) {
+        articleDao.insertArticle(articles.toArticleEntity())
+    }
 
-
-    override suspend fun updateBookmarkArticle(article: Article) {
-        Log.e("TAG", "updateBookmarkArticle: $article")
-        val articleId = articleDao.getArticleIdByTitle(article.title)
-        if (articleId != null) {
-            // Article exists in the database, update it
-            articleDao.updateBookmarkStatus(article.title)
-            Log.e("TAG", "updateBookmarkStatus: ")
-        } else {
-            Log.e("TAG", "insertArticle " )
-            // Article does not exist in the database, insert it
-            articleDao.insertArticle(article.toArticleEntity())
-        }
+    override suspend fun removeArticle(articles: Article) {
+        articleDao.deleteArticle(articles.toArticleEntity())
     }
 
     override suspend fun getBookmarkedArticles(): Flow<List<Article>> {

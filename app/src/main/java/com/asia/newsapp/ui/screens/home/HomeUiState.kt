@@ -16,7 +16,6 @@ data class HomeUiState(
 )
 
 data class ArticleUiState(
-    val id: Long,
     val title: String,
     val publishedAt: String,
     val author: String,
@@ -28,7 +27,6 @@ data class ArticleUiState(
 
 fun Article.toUIState(): ArticleUiState {
     return ArticleUiState(
-        id = id,
         title = title,
         description = description,
         imageUrl = imageUrl,
@@ -41,15 +39,14 @@ fun Article.toUIState(): ArticleUiState {
 
 fun ArticleUiState.toEntity(): Article {
     return Article(
-        id = id,
-        title = title,
-        description = description,
-        imageUrl = imageUrl,
-        isBookmarked = isBookmarked,
-        publishedAt = publishedAt,
-        author = author,
-        url = url,
-        content = ""
+            author = author,
+            title = title,
+            description = description,
+            url = url,
+            imageUrl = imageUrl,
+            publishedAt = publishedAt,
+            content = "",
+            isBookmarked = isBookmarked
     )
 }
 

@@ -1,5 +1,6 @@
 package com.asia.newsapp.ui.screens.bookmarked
 
+import android.util.Log
 import com.asia.newsapp.domain.entity.Article
 import com.asia.newsapp.domain.usecase.BookmarkedArticlesUseCase
 import com.asia.newsapp.ui.screens.base.BaseViewModel
@@ -9,7 +10,7 @@ import com.asia.newsapp.ui.screens.home.toUiState
 
 
 class BookmarkedViewModel(
-    private val getBookmarkedNews: BookmarkedArticlesUseCase
+    private val bookmarkedNews: BookmarkedArticlesUseCase
 ) : BaseViewModel<BookmarkedUiState, BookmarkedUiEffect>(BookmarkedUiState()),
     BookmarkedInteractionListener {
 
@@ -20,33 +21,59 @@ class BookmarkedViewModel(
     private fun getAllArticles() {
         updateState { it.copy(isLoading = true) }
         tryToCollect(
-                function = getBookmarkedNews::getBookmarkedArticles,
+                function = bookmarkedNews::getBookmarkedArticles,
                 onSuccess = ::onGetArticlesSuccess,
                 onError = ::onError
         )
     }
 
     private fun onGetArticlesSuccess(articles: List<Article>) {
+        Log.e("TAG", "onGetArticlesSuccess: $articles")
         updateState { it.copy(isLoading = false, articles = articles.toUiState()) }
     }
 
-    private fun updateBookmarkStatus(article: ArticleUiState) {
+    override fun onClickBookMark(article: ArticleUiState) {
+        Log.e("TAG", "onClickBookMark: $article")
+        if (article.isBookmarked) {
+            deleteArticle(article)
+        } else {
+            saveArticle(article)
+        }
+    }
+
+    //save in database and change state to true
+    private fun saveArticle(article: ArticleUiState) {
         tryToExecute(
-                function = { getBookmarkedNews::updateBookmarkArticle.invoke(article.toEntity())},
-                onSuccess = { onUpdateBookmarkStatusSuccess() },
-                onError = ::onError
+                { bookmarkedNews.saveArticle(article.toEntity()) },
+                { updateBookmarkStatus(article, true) },
+                ::onError
         )
     }
 
-    private fun onUpdateBookmarkStatusSuccess() {
+    private fun deleteArticle(article: ArticleUiState) {
+        tryToExecute(
+                { bookmarkedNews.removeArticle(article.toEntity()) },
+                { updateBookmarkStatus(article, false) },
+                ::onError
+        )
+    }
+
+    private fun updateBookmarkStatus(article: ArticleUiState, isBookmarked: Boolean) {
+        updateState {
+            it.copy(
+                    articles = state.value.articles.map { articleState ->
+                        if (articleState.title == article.title) {
+                            articleState.copy(isBookmarked = isBookmarked)
+                        } else {
+                            articleState
+                        }
+                    }
+            )
+        }
     }
 
     private fun onError() {
-        updateState { it.copy(isLoading = false,isError = true) }
-    }
-
-    override fun onClickBookMark(article: ArticleUiState) {
-        updateBookmarkStatus(article)
+        updateState { it.copy(isLoading = false, isError = true) }
     }
 
 }
