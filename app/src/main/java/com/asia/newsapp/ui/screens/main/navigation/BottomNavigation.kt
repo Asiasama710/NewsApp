@@ -5,11 +5,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,15 +19,13 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.asia.newsapp.ui.theme.Theme
 
 @Composable
-fun HRBottomNavigation(
+fun BottomNavigation(
     screens: List<Screen>,
     onNavigateTo: (Screen) -> Unit,
     currentDestination: NavDestination?
 ) {
 
-    AnimatedVisibility(
-            visible = true,
-    ) {
+    AnimatedVisibility(visible = true) {
         AppBottomBar {
             screens.forEach { screen ->
                 val selected: Boolean =
@@ -35,6 +33,7 @@ fun HRBottomNavigation(
                 AppBottomBarItem(
                         selected = selected,
                         onClick = { onNavigateTo(screen) },
+                        title = screen.title?:"",
                         icon = {
                             Icon(
                                     painter = if (selected) {
@@ -61,7 +60,8 @@ private fun AppBottomBar(
     NavigationBar(
             modifier = modifier,
             containerColor = Theme.colors.background,
-            tonalElevation = 4.dp,
+            contentColor = Theme.colors.surface,
+            tonalElevation = 8.dp,
             content = content
     )
 }
@@ -70,6 +70,7 @@ private fun AppBottomBar(
 private fun RowScope.AppBottomBarItem(
     selected: Boolean,
     onClick: () -> Unit,
+    title:String,
     icon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     selectedIcon: @Composable () -> Unit = icon,
@@ -84,20 +85,16 @@ private fun RowScope.AppBottomBarItem(
             enabled = enabled,
             interactionSource = MutableInteractionSource(),
             label = {
-                Divider(
-                        thickness = 3.dp,
-                        color = if (selected) {
-                            Theme.colors.primary
-                        } else {
-                            Theme.colors.background
-                        },
-                        modifier = Modifier.padding(vertical = 5.dp, horizontal = 20.dp)
+                Text(
+                    text = title,
+                    color = if (selected) Theme.colors.primary else  Theme.colors.background,
+                    modifier = Modifier.padding(vertical = 0.dp, horizontal = 20.dp)
                 )
             },
             alwaysShowLabel = alwaysShowLabel,
             colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Theme.colors.primary,
-                    unselectedIconColor = Theme.colors.contentPrimary,
+                    unselectedIconColor = Theme.colors.surface,
                     selectedTextColor = Theme.colors.primary,
                     unselectedTextColor = Theme.colors.background,
                     indicatorColor = Theme.colors.background
