@@ -1,4 +1,4 @@
-package com.asia.newsapp.ui.screens.home.composable.modifier
+package com.asia.newsapp.ui.composable.modifier
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

@@ -12,43 +12,8 @@ data class ArticleEntity(
     val articleContent: String,
     val articleImageUrl: String,
     val articleDate: String,
+    val articleUrl: String,
+    val articleAuthor: String ,
     val isBookmarked: Boolean = true,
 )
 
-fun Article.toArticleEntity(): ArticleEntity {
-    return ArticleEntity(
-            articleHeader = title,
-            articleDescription = description,
-            articleContent = content,
-            articleDate = publishedAt,
-            articleImageUrl = imageUrl,
-            isBookmarked = isBookmarked,
-    )
-}
-fun ArticleDto.toEntity(): Article {
-    return Article(
-        author = author ?: "",
-        title = title ?: "",
-        description = description ?: "",
-        content = content ?: "",
-        publishedAt = publishedAt,
-        imageUrl = urlToImage ?: "",
-        url = url ?: "",
-        isBookmarked = false,
-    )
-}
-fun ArticleEntity.toEntity(): Article {
-    return Article(
-        author = "",
-        title = articleHeader,
-        description = articleDescription,
-        content = articleContent,
-        publishedAt = articleDate,
-        imageUrl = articleImageUrl,
-        url = "",
-        isBookmarked = true,
-    )
-}
-
-
-fun List<ArticleEntity>.toEntity() = map { it.toEntity() }

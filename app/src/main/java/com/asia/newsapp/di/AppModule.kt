@@ -5,11 +5,12 @@ import org.koin.dsl.module
 
 fun appModule() = module {
     includes(
-        LocalDatabaseModule,
-        RepositoryModule,
+        localDatabaseModule,
+        dataSourceModule,
+        repositoryModule,
         viewModelModule,
-        NetworkModule,
-        UseCaseModule
+        networkModule,
+        useCaseModule
     )
 
 }

@@ -1,4 +1,4 @@
-package com.asia.newsapp.ui.screens.home.composable
+package com.asia.newsapp.ui.composable
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -85,15 +85,13 @@ fun <T : Any> PagingList(
 
                 refresh is LoadState.Loading -> {
                     Log.e("TAG", "PagingList: loading state refresh")
-
                     item {
 
                         Box(
                             modifier = Modifier.fillParentMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Loading()
-
+                            EmptyScreenItem()
                         }
                     }
                 }

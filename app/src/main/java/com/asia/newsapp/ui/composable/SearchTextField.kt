@@ -1,4 +1,4 @@
-package com.asia.newsapp.ui.screens.home.composable
+package com.asia.newsapp.ui.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape

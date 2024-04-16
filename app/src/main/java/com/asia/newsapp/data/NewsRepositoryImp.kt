@@ -2,10 +2,10 @@ package com.asia.newsapp.data
 
 import android.util.Log
 import com.asia.newsapp.data.source.local.ArticleDao
-import com.asia.newsapp.data.source.local.toArticleEntity
-import com.asia.newsapp.data.source.local.toEntity
 import com.asia.newsapp.data.source.remote.NewsService
 import com.asia.newsapp.data.source.remote.utilities.handleApiResponse
+import com.asia.newsapp.data.source.toArticleEntity
+import com.asia.newsapp.data.source.toEntity
 import com.asia.newsapp.domain.NewsRepository
 import com.asia.newsapp.domain.entity.Article
 import com.asia.newsapp.domain.entity.PaginationItems

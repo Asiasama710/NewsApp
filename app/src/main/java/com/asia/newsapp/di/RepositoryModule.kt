@@ -6,6 +6,6 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val RepositoryModule = module {
+val repositoryModule = module {
     singleOf(::NewsRepositoryImp) { bind<NewsRepository>() }
 }
