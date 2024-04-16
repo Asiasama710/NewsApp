@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NewsApp</string>
+    <string name="search">ٍSearch…</string>
+    <string name="nothing_to_show">Nothing to show</string>
+    <string name="empty_search_description">Write something in search box to show result</string>
+    <string name="read_more">read more icon</string>
+
 </resources>

@@ -11,12 +11,16 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 private val LocalColorScheme = staticCompositionLocalOf { LightColors }
 private val LocalTypography = staticCompositionLocalOf { NewsTypography() }
-
+val LocalNavigationProvider = staticCompositionLocalOf<NavHostController> {
+    error("No navigation host controller provided.")
+}
 
 object Theme {
     val colors: Colors
@@ -59,6 +63,7 @@ fun NewsAppTheme(
     }
 
     CompositionLocalProvider(
+        LocalNavigationProvider provides rememberNavController(),
         LocalColorScheme provides colorScheme,
         LocalTypography provides newsTypography,
     ) {
