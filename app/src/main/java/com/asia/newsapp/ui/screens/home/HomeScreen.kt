@@ -18,11 +18,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.asia.newsapp.ui.screens.home.composable.SearchTextField
+import com.asia.newsapp.ui.composable.SearchTextField
 import com.asia.newsapp.ui.theme.LocalNavigationProvider
 import com.asia.newsapp.ui.theme.Theme
-import com.asia.newsapp.ui.screens.home.composable.ArticleItem
-import com.asia.newsapp.ui.screens.home.composable.PagingList
+import com.asia.newsapp.ui.composable.ArticleItem
+import com.asia.newsapp.ui.composable.PagingList
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -35,14 +35,18 @@ fun HomeScreen(
 
     HomeScreenContent(
             state = state,
-            listener = viewModel
+            listener = viewModel,
+            onClickReadMore = { url ->
+                navigateTo(HomeUiEffect.NavigateToWebView(url))
+            }
     )
 }
 
 @Composable
 fun HomeScreenContent(
     state: HomeUiState,
-    listener: HomeInteractionListener
+    listener: HomeInteractionListener,
+    onClickReadMore: (String) -> Unit
 ) {
     val news = state.news.collectAsLazyPagingItems()
     Log.e("TAG", "HomeScreenContent: ${news.itemSnapshotList}")
@@ -90,7 +94,7 @@ fun HomeScreenContent(
                                         author = it.author,
                                         publishedDate = it.publishedAt,
                                         onBookmarkedClicked = { listener.onClickBookMark(it) },
-                                        onItemClick = {  }
+                                        onItemClick = { onClickReadMore(it.url) }
                                 )
                             }
                         }

@@ -12,14 +12,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.asia.newsapp.ui.screens.home.HomeUiEffect
-import com.asia.newsapp.ui.screens.home.composable.ArticleItem
+import com.asia.newsapp.ui.composable.ArticleItem
 import com.asia.newsapp.ui.theme.LocalNavigationProvider
 import com.asia.newsapp.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BookmarkedScreen(
-    navigateTo: (HomeUiEffect) -> Unit,
+    navigateTo: (BookmarkedUiEffect) -> Unit,
     viewModel: BookmarkedViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -27,14 +27,18 @@ fun BookmarkedScreen(
 
     BookmarkedScreenContent(
             state = state,
-            listener = viewModel
+            listener = viewModel,
+            onClickReadMore = { url ->
+                navigateTo(BookmarkedUiEffect.NavigateToWebView(url))
+            }
     )
 }
 
 @Composable
 fun BookmarkedScreenContent(
     state: BookmarkedUiState,
-    listener: BookmarkedInteractionListener
+    listener: BookmarkedInteractionListener,
+    onClickReadMore: (String) -> Unit
 ) {
 
     Scaffold(
@@ -54,7 +58,7 @@ fun BookmarkedScreenContent(
                     author = news.author,
                     publishedDate = news.publishedAt,
                     onBookmarkedClicked = {  listener.onClickBookMark(news) },
-                    onItemClick = {  }
+                    onItemClick = {onClickReadMore(news.url)  }
             )
         }
     }}

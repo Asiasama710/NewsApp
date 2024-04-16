@@ -7,6 +7,7 @@ import com.asia.newsapp.R
 const val navigationRouteMain = "main"
 const val navigationRouteHome = "home"
 const val navigationRouteBookmarked = "bookmarked"
+const val navigationRouteWebView = "webview"
 
 
 sealed class Screen(
@@ -39,6 +40,9 @@ sealed class Screen(
         selectedIcon = R.drawable.ic_bookmarked_selected,
         unselectedIcon = R.drawable.ic_bookmarked_unselected
 
+    )
+    data object WebView : Screen(
+        route = navigationRouteWebView
     )
 
 }

@@ -32,6 +32,7 @@ class HomeViewModel(
 
     override fun onSearchValueChanged(query: String) {
         updateState { it.copy(keyword = query) }
+        if (query.isEmpty()) return
         onSearch()
     }
     override fun onClickBookMark(article: ArticleUiState) {
@@ -77,7 +78,7 @@ class HomeViewModel(
         searchJob?.cancel()
         searchJob = tryToExecute(
                 {
-                    delay(1000)
+                    delay(1500)
                     searchForNews(state.value.keyword.trim())
                 },
                 { onSuccess(it) },
@@ -86,7 +87,7 @@ class HomeViewModel(
     }
 
     private fun onSuccess(result: Flow<PagingData<Article>>) {
-        updateState { it.copy(news = result.toUIState()) }
+        updateState { it.copy(news = result.toUIState(), isLoading = false) }
         Log.e("TAG", "onSuccess:${ result.toUIState()}")
     }
 

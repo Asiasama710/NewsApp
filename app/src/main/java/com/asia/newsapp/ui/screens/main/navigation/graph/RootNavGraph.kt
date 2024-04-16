@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import com.asia.newsapp.ui.screens.main.navigation.Screen
 import com.asia.newsapp.ui.screens.main.navigation.ext.navigateTo
 import com.asia.newsapp.ui.screens.main.navigation.mainNavGraph
+import com.asia.newsapp.ui.screens.main.navigation.webViewScreen
 
 @Composable
 fun RootNavGraph(
@@ -21,5 +22,6 @@ fun RootNavGraph(
             modifier = modifier,
     ) {
         mainNavGraph(onNavigateToRoot = navController::navigateTo)
+        webViewScreen()
     }
 }
