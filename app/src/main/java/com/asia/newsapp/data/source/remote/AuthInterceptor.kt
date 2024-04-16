@@ -1,4 +1,4 @@
-package com.asia.newsapp.data.source.remote.utilities
+package com.asia.newsapp.data.source.remote
 
 import com.asia.newsapp.BuildConfig
 import okhttp3.Interceptor

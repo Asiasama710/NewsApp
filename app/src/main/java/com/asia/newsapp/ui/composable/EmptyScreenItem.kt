@@ -1,4 +1,4 @@
-package com.asia.newsapp.ui.screens.home.composable
+package com.asia.newsapp.ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,13 +37,13 @@ fun EmptyScreenItem(
         Box(
                 modifier = modifier
                     .clip(CircleShape)
-                    .background(Theme.colors.secondary)
+                    .background(Theme.colors.border.copy(alpha = 0.5f))
                     .padding(24.dp)
         ) {
             Icon(
                     modifier = Modifier.size(56.dp),
                     painter = painterResource(id = iconRes),
-                    tint = Theme.colors.primary,
+                    tint = Theme.colors.surface,
                     contentDescription = null
             )
         }
@@ -55,8 +55,8 @@ fun EmptyScreenItem(
         ) {
             Text(
                     text = title,
-                    style = Theme.typography.body,
-                    color = Theme.colors.primary
+                    style = Theme.typography.title,
+                    color = Theme.colors.contentTertiary
             )
 
             Text(
@@ -67,7 +67,7 @@ fun EmptyScreenItem(
                     text = description,
                     style = Theme.typography.caption,
                     textAlign = TextAlign.Center,
-                    color = Theme.colors.primary
+                    color = Theme.colors.contentTertiary
             )
         }
     }

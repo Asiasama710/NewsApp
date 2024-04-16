@@ -69,11 +69,10 @@ fun ArticleItem(
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.padding(horizontal = 16.dp),
-            colors =  CardDefaults.cardColors(
-                    containerColor = Theme.colors.onPrimary,
-                    contentColor = Theme.colors.onPrimary
-            )
+        colors =  CardDefaults.cardColors(
+                containerColor = Theme.colors.onPrimary,
+                contentColor = Theme.colors.onPrimary
+        )
     ) {
         Column(
                 modifier = Modifier.noRippleEffect { onItemClick() }

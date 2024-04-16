@@ -50,6 +50,7 @@ abstract class BaseViewModel<S, E>(initialState: S) : ViewModel(), KoinComponent
             }
         }
     }
+
     protected fun <T> tryToExecute(
         function: suspend () -> T,
         onSuccess: (T) -> Unit,

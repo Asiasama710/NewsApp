@@ -91,7 +91,6 @@ fun NavGraphBuilder.homeScreen(onNavigateTo: (Screen) -> Unit) {
                             Screen.WebView.args = bundleOf(Pair("url", navigate.url))
                             Screen.WebView.withClearBackStack().also(onNavigateTo)
                         }
-                        else -> {}
                     }
                 },
         )
@@ -109,7 +108,6 @@ fun NavGraphBuilder.bookmarkedScreen(onNavigateTo: (Screen) -> Unit) {
                             Screen.WebView.args = bundleOf(Pair("url", navigate.url))
                             Screen.WebView.withClearBackStack().also(onNavigateTo)
                         }
-                        else -> {}
                     }
                 },
         )

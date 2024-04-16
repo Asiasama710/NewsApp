@@ -1,7 +1,5 @@
 package com.asia.newsapp.ui.composable
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -22,107 +19,92 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.asia.newsapp.R
 import com.asia.newsapp.ui.theme.Theme
 
 @Composable
 fun <T : Any> PagingList(
     modifier: Modifier = Modifier,
     data: LazyPagingItems<T>,
-    hasOptionalList: Boolean = false,
-    optionalTopLList: List<T> = emptyList(),
-    optionalHeaderTitle: String = "",
     paddingValues: PaddingValues = PaddingValues(16.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
-    optionalContent: @Composable (T) -> Unit = {},
     content: @Composable (T?) -> Unit,
 ) {
+
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Theme.colors.background),
+        modifier = modifier.background(Theme.colors.background),
         verticalArrangement = verticalArrangement,
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues
     ) {
 
-        item {
-            AnimatedVisibility(hasOptionalList) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Theme.colors.primary)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = optionalHeaderTitle,
-                        style = Theme.typography.titleMedium,
-                        color = Theme.colors.onPrimary
-                    )
-                }
-            }
-        }
-
-
         items(data.itemCount) { index ->
             val item = data[index]
             content(item)
         }
-
-        data.loadState.apply {
-            when {
-                refresh is LoadState.NotLoading && data.itemCount < 1 -> {
-                    Log.e("TAG", "PagingList:  LoadState.NotLoading && data.itemCount < 1")
-
-
-                    items(optionalTopLList) { item ->
-                        optionalContent(item)
-                    }
-                }
-
-                refresh is LoadState.Loading -> {
-                    Log.e("TAG", "PagingList: loading state refresh")
-                    item {
+        item {
+            data.loadState.apply {
+                when {
+                    refresh is LoadState.NotLoading && data.itemSnapshotList.isEmpty() -> {
 
                         Box(
-                            modifier = Modifier.fillParentMaxSize(),
-                            contentAlignment = Alignment.Center
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                    text = "No Results Found",
+                                    modifier = Modifier.align(Alignment.Center),
+                                    textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    refresh is LoadState.Loading -> {
+
+                        Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
                         ) {
                             EmptyScreenItem()
                         }
-                    }
-                }
 
-                append is LoadState.Loading -> {
-                    Log.e("TAG", "PagingList: loading state append")
-                    item {
+                    }
+
+                    append is LoadState.Loading -> {
                         Loading()
                     }
-                }
 
-                refresh is LoadState.Error -> {
-                    item {
-                        ErrorView(
-                            message = "No Internet Connection",
-                            onClickRetry = { data.retry() },
-                            modifier = Modifier.fillParentMaxSize()
-                        )
+                    refresh is LoadState.Error -> {
+
+                        Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                        ) {
+                            ErrorView(
+                                    message = stringResource(R.string.no_internet_connection),
+                                    onClickRetry = { data.retry() },
+                            )
+                        }
                     }
-                }
 
-                append is LoadState.Error -> {
-                    item {
+                    append is LoadState.Error -> {
                         ErrorItem(
-                            message = "No Internet Connection",
-                            onClickRetry = { data.retry() },
+                                message = stringResource(R.string.no_internet_connection),
+                                onClickRetry = { data.retry() },
                         )
                     }
+
                 }
             }
         }
+
+
+
     }
 }
 
@@ -145,23 +127,20 @@ private fun ErrorItem(
             color = Color.Red
         )
         OutlinedButton(onClick = onClickRetry) {
-            Text(text = "Try again")
+            Text(text = stringResource(R.string.try_again),style =Theme.typography.caption, color = Theme.colors.contentPrimary)
         }
     }
 }
 
 @Composable
-private fun ErrorView(
+fun ErrorView(
     message: String,
     modifier: Modifier = Modifier,
     onClickRetry: () -> Unit,
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp)
-            .onPlaced { cor ->
-
-            },
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -173,7 +152,7 @@ private fun ErrorView(
             color = Color.Red
         )
         OutlinedButton(
-                title = "Try again",
+                title = stringResource(R.string.try_again),
                 onClick = onClickRetry,
                 modifier = Modifier
                     .fillMaxWidth()

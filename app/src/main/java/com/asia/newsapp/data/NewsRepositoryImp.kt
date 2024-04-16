@@ -1,11 +1,10 @@
 package com.asia.newsapp.data
 
-import android.util.Log
 import com.asia.newsapp.data.source.local.ArticleDao
 import com.asia.newsapp.data.source.remote.NewsService
-import com.asia.newsapp.data.source.remote.utilities.handleApiResponse
-import com.asia.newsapp.data.source.toArticleEntity
-import com.asia.newsapp.data.source.toEntity
+import com.asia.newsapp.data.util.handleApiResponse
+import com.asia.newsapp.data.util.toArticleEntity
+import com.asia.newsapp.data.util.toEntity
 import com.asia.newsapp.domain.NewsRepository
 import com.asia.newsapp.domain.entity.Article
 import com.asia.newsapp.domain.entity.PaginationItems
@@ -29,14 +28,10 @@ class NewsRepositoryImp(
             val response = handleApiResponse(service.searchForNews(query, pageNumber, limit))
             val bookmarkedArticles =
                 getBookmarkedArticles().firstOrNull()?.map { it.title } ?: emptyList()
-
-            Log.e("TAG", "bookmarkedArticles: $bookmarkedArticles")
             return response.articles.map { articleDto ->
                 val isBookmarked = bookmarkedArticles.contains(articleDto.title)
-                Log.e("TAG", "isBookmarked: $isBookmarked")
                 articleDto.toEntity().copy(isBookmarked = isBookmarked)
             }.let { articles ->
-                Log.e("TAG", "searchForNews: $articles")
                 PaginationItems(
                         items = articles,
                         page = pageNumber,

@@ -12,7 +12,8 @@ data class HomeUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val keyword: String = "",
-    val news: Flow<PagingData<ArticleUiState>> = emptyFlow(),
+    val articles: Flow<PagingData<ArticleUiState>> = emptyFlow(),
+    val bookmarkedArticles: List<ArticleUiState> = emptyList()
 )
 
 data class ArticleUiState(
