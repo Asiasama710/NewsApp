@@ -1,11 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
+    id("kotlin-kapt")
 }
+
+val localProperties = Properties()
+val localPropsFile = localProperties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.asia.newsapp"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.asia.newsapp"
@@ -18,15 +26,20 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY", localProperties.getProperty("apiKey"))
     }
 
     buildTypes {
         release {
+            isDebuggable = false
             isMinifyEnabled = false
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
             )
+        }
+        debug {
+            isDebuggable = true
         }
     }
     compileOptions {
@@ -38,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -75,7 +89,32 @@ dependencies {
     //lottie
     implementation(libs.lottie.compose)
 
+    //time
+    implementation(libs.kotlinx.datetime)
+
     // Koin
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
+
+    // paging
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(  libs.androidx.paging.compose)
+    implementation(  libs.androidx.paging.common)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.logging.interceptor)
+
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+
+    //navigation
+    implementation(libs.androidx.navigation.compose)
+
 }
