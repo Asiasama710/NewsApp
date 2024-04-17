@@ -33,7 +33,7 @@ import com.asia.newsapp.R
 import com.asia.newsapp.ui.composable.modifier.noRippleEffect
 import com.asia.newsapp.ui.theme.NewsAppTheme
 import com.asia.newsapp.ui.theme.Theme
-
+import com.asia.newsapp.ui.util.formatDate
 
 
 @Preview(showBackground = true)
@@ -88,7 +88,7 @@ fun ArticleItem(
                 Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(color = Color.Black.copy(alpha = 0.3f))
+                            .background(color = Color.Black.copy(alpha = 0.5f))
                 )
                 Box(
                         Modifier
@@ -118,7 +118,7 @@ fun ArticleItem(
                                     modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                    text = publishedDate,
+                                    text = formatDate(publishedDate)?:"",
                                     style = Theme.typography.caption,
                                     color = Theme.colors.onPrimary,
                                     maxLines = 2,
@@ -166,7 +166,7 @@ fun ArticleItem(
                         verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                            text = "Read more",
+                            text = stringResource(id = R.string.read_more),
                             style = Theme.typography.caption,
                             color = Theme.colors.primary,
                             modifier = Modifier.padding(end = 4.dp)

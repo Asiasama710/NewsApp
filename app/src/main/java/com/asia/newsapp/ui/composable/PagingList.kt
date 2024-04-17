@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -132,13 +133,10 @@ private fun ErrorView(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = message,
-            maxLines = 1,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            style = Theme.typography.body,
-            color = Color.Red
-        )
+
+        Box {
+            AnimatedPreloader(modifier = Modifier.size(200.dp).align(Alignment.Center))
+        }
         OutlinedButton(
                 title = stringResource(R.string.try_again),
                 onClick = onClickRetry,
