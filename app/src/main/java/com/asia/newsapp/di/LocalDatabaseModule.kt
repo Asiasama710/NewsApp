@@ -18,6 +18,4 @@ val localDatabaseModule = module {
         val database = get<NewsDatabase>()
         database.articleDao()
     }
-    singleOf(::SearchNewsDataSource)
-
 }
