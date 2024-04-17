@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,18 +25,9 @@ abstract class BaseViewModel<S, E>(initialState: S) : ViewModel(), KoinComponent
     protected val _state = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<E?>()
-    val effect = _effect.asSharedFlow().throttleFirst(500).mapNotNull { it }
-
 
     protected fun updateState(updater: (S) -> S) {
         _state.update(updater)
-    }
-
-    protected fun sendNewEffect(newEffect: E) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _effect.emit(newEffect)
-        }
     }
 
     protected fun <T> tryToCollect(
@@ -66,7 +58,7 @@ abstract class BaseViewModel<S, E>(initialState: S) : ViewModel(), KoinComponent
     private fun runWithErrorCheck(
         onError: () -> Unit,
         inScope: CoroutineScope = viewModelScope,
-        dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
         function: suspend () -> Unit
     ): Job {
         return inScope.launch(dispatcher) {
@@ -78,17 +70,10 @@ abstract class BaseViewModel<S, E>(initialState: S) : ViewModel(), KoinComponent
         }
     }
 
-    private fun <T> Flow<T>.throttleFirst(periodMillis: Long): Flow<T> {
-        require(periodMillis > 0)
-        return flow {
-            var lastTime = 0L
-            collect { value ->
-                val currentTime = Clock.System.now().toEpochMilliseconds()
-                if (currentTime - lastTime >= periodMillis) {
-                    lastTime = currentTime
-                    emit(value)
-                }
-            }
+    protected fun launchDelayed(duration: Long, block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+            delay(duration)
+            block()
         }
     }
 }

@@ -13,7 +13,6 @@ data class HomeUiState(
     val isError: Boolean = false,
     val keyword: String = "",
     val articles: Flow<PagingData<ArticleUiState>> = emptyFlow(),
-    val bookmarkedArticles: List<ArticleUiState> = emptyList()
 )
 
 data class ArticleUiState(

@@ -2,6 +2,9 @@ package com.asia.newsapp.ui.screens.main.navigation
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -63,7 +66,7 @@ fun NavGraphBuilder.mainNavGraph(onNavigateToRoot: (Screen) -> Unit) {
 
             Surface(
                     color = if (color == Color.Unspecified) MaterialTheme.colorScheme.surface else color,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().padding(bottom = paddingValues.calculateBottomPadding()),
             ) {
                 CompositionLocalProvider(
                         LocalAbsoluteTonalElevation provides 0.dp

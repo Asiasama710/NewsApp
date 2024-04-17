@@ -57,6 +57,7 @@ fun PreviewNewsItem() {
 
 @Composable
 fun ArticleItem(
+    modifier: Modifier= Modifier,
     title: String,
     description: String,
     imageUrl: String,
@@ -67,6 +68,7 @@ fun ArticleItem(
     onItemClick: () -> Unit
 ) {
     Card(
+        modifier= modifier,
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors =  CardDefaults.cardColors(
@@ -74,8 +76,7 @@ fun ArticleItem(
                 contentColor = Theme.colors.onPrimary
         )
     ) {
-        Column(
-                modifier = Modifier.noRippleEffect { onItemClick() }
+        Column(modifier = Modifier.noRippleEffect { onItemClick() }
         ) {
             Box(modifier = Modifier.height(200.dp)) {
                 Image(

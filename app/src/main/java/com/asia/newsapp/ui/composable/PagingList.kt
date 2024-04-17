@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -33,7 +34,7 @@ fun <T : Any> PagingList(
     data: LazyPagingItems<T>,
     paddingValues: PaddingValues = PaddingValues(16.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
-    content: @Composable (T?) -> Unit,
+    content: LazyListScope.() -> Unit,
 ) {
 
     LazyColumn(
@@ -43,13 +44,12 @@ fun <T : Any> PagingList(
         contentPadding = paddingValues
     ) {
 
-        items(data.itemCount) { index ->
-            val item = data[index]
-            content(item)
-        }
+        content()
+
         item {
             data.loadState.apply {
                 when {
+
                     refresh is LoadState.NotLoading && data.itemSnapshotList.isEmpty() -> {
 
                         Box(
@@ -63,18 +63,6 @@ fun <T : Any> PagingList(
                             )
                         }
                     }
-
-                    refresh is LoadState.Loading -> {
-
-                        Box(
-                                modifier = Modifier.fillParentMaxSize(),
-                                contentAlignment = Alignment.Center
-                        ) {
-                            EmptyScreenItem()
-                        }
-
-                    }
-
                     append is LoadState.Loading -> {
                         Loading()
                     }
@@ -133,7 +121,7 @@ private fun ErrorItem(
 }
 
 @Composable
-fun ErrorView(
+private fun ErrorView(
     message: String,
     modifier: Modifier = Modifier,
     onClickRetry: () -> Unit,

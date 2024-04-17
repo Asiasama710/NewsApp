@@ -1,6 +1,5 @@
 package com.asia.newsapp.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -12,11 +11,10 @@ import com.asia.newsapp.domain.usecase.BookmarkedArticlesUseCase
 import com.asia.newsapp.ui.screens.base.BaseViewModel
 import com.asia.newsapp.ui.util.pagingSource.SearchNewsDataSource
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 
 class HomeViewModel(
@@ -25,17 +23,20 @@ class HomeViewModel(
 ) : BaseViewModel<HomeUiState, HomeUiEffect>(HomeUiState()), HomeInteractionListener {
 
     private var searchJob: Job? = null
-
      private fun searchForNews(query: String): Flow<PagingData<Article>> {
         searchNewsDataSource.setSearchText(query)
         return Pager(config =  PagingConfig(pageSize = 5), pagingSourceFactory = { searchNewsDataSource }).flow
     }
 
     override fun onSearchValueChanged(query: String) {
-        updateState { it.copy(keyword = query) }
-        if (query.isEmpty()) return
-        onSearch()
+        updateState { it.copy(keyword = query, isLoading = true, isError = false) }
+        if (query.isEmpty()) {
+            updateState { it.copy(articles = emptyFlow(), isLoading = false) }
+            return
+        }
+        launchSearchJob()
     }
+
     override fun onClickBookMark(article: ArticleUiState) {
         if (article.isBookmarked){
             deleteArticle(article)
@@ -73,27 +74,30 @@ class HomeViewModel(
         )
     }
 
+
     private fun onSearch() {
-        updateState { it.copy(isLoading = true, isError = false) }
-        searchJob?.cancel()
-        searchJob = tryToExecute(
-                {
-                    delay(1500)
-                    searchForNews(state.value.keyword.trim())
-                },
+      updateState { it.copy(isLoading = true, isError = false) }
+      tryToExecute(
+                { searchForNews(state.value.keyword.trim()).distinctUntilChanged() },
                 { onSuccess(it) },
                 ::onError
         )
     }
 
+    private fun launchSearchJob() {
+        searchJob?.cancel()
+        searchJob = launchDelayed(300L) { this@HomeViewModel.onSearch() }
+    }
 
     private fun onSuccess(result: Flow<PagingData<Article>>) {
-        updateState { it.copy(articles = result.toUIState(), isLoading = false) }
+        updateState { it.copy(articles =  result.toUIState()) }
+        updateState { it.copy( isLoading = false) }
     }
 
 
     private fun onError() {
-        updateState { it.copy(isLoading = false, isError = true,) }
+        updateState { it.copy(isLoading = false, isError = true, articles = emptyFlow()) }
     }
+
 
 }
