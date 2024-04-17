@@ -1,4 +1,4 @@
-package com.asia.newsapp.data.source.remote.utilities
+package com.asia.newsapp.data.util
 
 import android.content.res.Resources
 import com.asia.newsapp.domain.util.BadRequestException

@@ -1,4 +1,4 @@
-package com.asia.newsapp.ui.screens.home.composable
+package com.asia.newsapp.ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,9 +25,9 @@ import com.asia.newsapp.ui.theme.Theme
 @Composable
 fun EmptyScreenItem(
     modifier: Modifier = Modifier,
-    iconRes: Int = R.drawable.search_icon,
+    iconRes: Int = R.drawable.ic_articles,
     title: String = stringResource(R.string.nothing_to_show),
-    description: String = stringResource(R.string.empty_search_description)
+    description: String = stringResource(R.string.empty_bookmarked_description)
 ) {
     Column(
             modifier = modifier.fillMaxSize(),
@@ -35,28 +35,28 @@ fun EmptyScreenItem(
             verticalArrangement = Arrangement.Center
     ) {
         Box(
-                modifier = modifier
+                modifier = Modifier
                     .clip(CircleShape)
-                    .background(Theme.colors.secondary)
+                    .background(Theme.colors.border.copy(alpha = 0.5f))
                     .padding(24.dp)
         ) {
             Icon(
                     modifier = Modifier.size(56.dp),
                     painter = painterResource(id = iconRes),
-                    tint = Theme.colors.primary,
+                    tint = Theme.colors.surface,
                     contentDescription = null
             )
         }
         Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                     text = title,
-                    style = Theme.typography.body,
-                    color = Theme.colors.primary
+                    style = Theme.typography.title,
+                    color = Theme.colors.contentTertiary
             )
 
             Text(
@@ -67,7 +67,7 @@ fun EmptyScreenItem(
                     text = description,
                     style = Theme.typography.caption,
                     textAlign = TextAlign.Center,
-                    color = Theme.colors.primary
+                    color = Theme.colors.contentTertiary
             )
         }
     }

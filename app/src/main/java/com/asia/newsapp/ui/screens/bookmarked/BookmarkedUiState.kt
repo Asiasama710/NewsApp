@@ -6,4 +6,6 @@ data class BookmarkedUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val articles: List<ArticleUiState> = emptyList(),
+    val showDialog: Boolean = false,
+    val selectedArticle: ArticleUiState = ArticleUiState()
 )

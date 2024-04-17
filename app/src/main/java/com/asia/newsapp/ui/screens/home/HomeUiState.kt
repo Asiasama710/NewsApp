@@ -12,17 +12,26 @@ data class HomeUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val keyword: String = "",
-    val news: Flow<PagingData<ArticleUiState>> = emptyFlow(),
-)
+    val articles: Flow<PagingData<ArticleUiState>> = emptyFlow(),
+    val news:List<ArticleUiState> = emptyList(),
+    val showDialog: Boolean = false,
+    val selectedArticle: ArticleUiState = ArticleUiState()
+){
+    enum class SourceName(val value: String) {
+        BBC("bbc-news"),
+        ABC("abc-news"),
+        ALJAZEERA("al-jazeera-english")
+    }
+}
 
 data class ArticleUiState(
-    val title: String,
-    val publishedAt: String,
-    val author: String,
-    val url: String,
-    val description: String,
-    val imageUrl: String,
-    val isBookmarked: Boolean,
+    val title: String="",
+    val publishedAt: String="",
+    val author: String="",
+    val url: String="",
+    val description: String="",
+    val imageUrl: String="",
+    val isBookmarked: Boolean=false,
 )
 
 fun Article.toUIState(): ArticleUiState {

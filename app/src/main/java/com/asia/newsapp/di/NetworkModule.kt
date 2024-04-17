@@ -1,7 +1,7 @@
 package com.asia.newsapp.di
 
 import com.asia.newsapp.data.source.remote.NewsService
-import com.asia.newsapp.data.source.remote.utilities.AuthInterceptor
+import com.asia.newsapp.data.source.remote.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -22,7 +22,7 @@ val networkModule = module {
         return logging
     }
 
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor,logging:HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor, logging:HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient().newBuilder().addInterceptor(authInterceptor).addInterceptor(logging).build()
     }
 

@@ -4,4 +4,6 @@ import com.asia.newsapp.ui.screens.home.ArticleUiState
 
 interface BookmarkedInteractionListener {
     fun onClickBookMark(article: ArticleUiState)
+    fun onClickDeleteFromBookMarked(article: ArticleUiState)
+    fun dismissDialog()
 }

@@ -28,42 +28,36 @@ class BookmarkedViewModel(
     }
 
     private fun onGetArticlesSuccess(articles: List<Article>) {
-        Log.e("TAG", "onGetArticlesSuccess: $articles")
         updateState { it.copy(isLoading = false, articles = articles.toUiState()) }
     }
 
     override fun onClickBookMark(article: ArticleUiState) {
-        Log.e("TAG", "onClickBookMark: $article")
-        if (article.isBookmarked) {
-            deleteArticle(article)
-        } else {
-            saveArticle(article)
-        }
+        updateState { it.copy(showDialog = true, selectedArticle = article) }
     }
 
-    //save in database and change state to true
-    private fun saveArticle(article: ArticleUiState) {
-        tryToExecute(
-                { bookmarkedNews.saveArticle(article.toEntity()) },
-                { updateBookmarkStatus(article, true) },
-                ::onError
-        )
+    override fun onClickDeleteFromBookMarked(article: ArticleUiState) {
+        updateState { it.copy(showDialog = false) }
+        deleteArticle(article)
+    }
+
+    override fun dismissDialog() {
+        updateState { it.copy(showDialog = false) }
     }
 
     private fun deleteArticle(article: ArticleUiState) {
         tryToExecute(
                 { bookmarkedNews.removeArticle(article.toEntity()) },
-                { updateBookmarkStatus(article, false) },
+                { updateBookmarkStatus(article) },
                 ::onError
         )
     }
 
-    private fun updateBookmarkStatus(article: ArticleUiState, isBookmarked: Boolean) {
+    private fun updateBookmarkStatus(article: ArticleUiState) {
         updateState {
             it.copy(
                     articles = state.value.articles.map { articleState ->
                         if (articleState.title == article.title) {
-                            articleState.copy(isBookmarked = isBookmarked)
+                            articleState.copy(isBookmarked = false)
                         } else {
                             articleState
                         }

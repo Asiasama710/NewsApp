@@ -33,7 +33,7 @@ import com.asia.newsapp.R
 import com.asia.newsapp.ui.composable.modifier.noRippleEffect
 import com.asia.newsapp.ui.theme.NewsAppTheme
 import com.asia.newsapp.ui.theme.Theme
-
+import com.asia.newsapp.ui.util.formatDate
 
 
 @Preview(showBackground = true)
@@ -57,27 +57,27 @@ fun PreviewNewsItem() {
 
 @Composable
 fun ArticleItem(
+    modifier: Modifier= Modifier,
     title: String,
     description: String,
     imageUrl: String,
     isBookmarked: Boolean,
     author:String,
     publishedDate:String,
-    onBookmarkedClicked: () -> Unit,
-    onItemClick: () -> Unit
+    onBookmarkedClicked: () -> Unit = {},
+    onItemClick: () -> Unit,
+    isBookmarkedShow: Boolean= true
 ) {
     Card(
+        modifier= modifier,
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.padding(horizontal = 16.dp),
-            colors =  CardDefaults.cardColors(
-                    containerColor = Theme.colors.onPrimary,
-                    contentColor = Theme.colors.onPrimary
-            )
+        colors =  CardDefaults.cardColors(
+                containerColor = Theme.colors.onPrimary,
+                contentColor = Theme.colors.onPrimary
+        )
     ) {
-        Column(
-                modifier = Modifier.noRippleEffect { onItemClick() }
-        ) {
+        Column(modifier = Modifier) {
             Box(modifier = Modifier.height(200.dp)) {
                 Image(
                     painter = rememberAsyncImagePainter(model = imageUrl),
@@ -88,7 +88,7 @@ fun ArticleItem(
                 Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(color = Color.Black.copy(alpha = 0.3f))
+                            .background(color = Color.Black.copy(alpha = 0.5f))
                 )
                 Box(
                         Modifier
@@ -118,7 +118,7 @@ fun ArticleItem(
                                     modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                    text = publishedDate,
+                                    text = formatDate(publishedDate)?:"",
                                     style = Theme.typography.caption,
                                     color = Theme.colors.onPrimary,
                                     maxLines = 2,
@@ -128,19 +128,21 @@ fun ArticleItem(
 
                     }
 
-
-                    IconButton(
-                        onClick = onBookmarkedClicked,
-                        colors = IconButtonDefaults.iconButtonColors(containerColor = Theme.colors.onPrimary),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Icon(
-                                painter = if (isBookmarked) painterResource(id = R.drawable.ic_bookmarked_selected)
-                                else painterResource(id = R.drawable.ic_bookmarked_unselected),
-                                contentDescription = title,
-                                tint = if (isBookmarked) Theme.colors.primary else Theme.colors.contentTertiary
-                        )
+                    if (isBookmarkedShow){
+                        IconButton(
+                                onClick = onBookmarkedClicked,
+                                colors = IconButtonDefaults.iconButtonColors(containerColor = Theme.colors.onPrimary),
+                                modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            Icon(
+                                    painter = if (isBookmarked) painterResource(id = R.drawable.ic_bookmarked_selected)
+                                    else painterResource(id = R.drawable.ic_bookmarked_unselected),
+                                    contentDescription = title,
+                                    tint = if (isBookmarked) Theme.colors.primary else Theme.colors.contentTertiary
+                            )
+                        }
                     }
+
                 }
             }
             Column(modifier = Modifier.padding(16.dp)) {
@@ -159,14 +161,14 @@ fun ArticleItem(
                         overflow = TextOverflow.Ellipsis
                 )
                 Row(
-                        modifier = Modifier
+                        modifier = Modifier.noRippleEffect { onItemClick() }
                             .fillMaxWidth()
                             .padding(top = 24.dp),
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                            text = "Read more",
+                            text = stringResource(id = R.string.read_more),
                             style = Theme.typography.caption,
                             color = Theme.colors.primary,
                             modifier = Modifier.padding(end = 4.dp)

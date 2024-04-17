@@ -1,4 +1,4 @@
-package com.asia.newsapp.data.source
+package com.asia.newsapp.data.util
 
 import com.asia.newsapp.data.source.local.ArticleEntity
 import com.asia.newsapp.data.source.remote.model.ArticleDto
