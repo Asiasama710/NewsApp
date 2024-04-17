@@ -32,7 +32,6 @@ class HomeViewModel(
 
     private fun getNews() {
         updateState { it.copy(isLoading = true,isError = false) }
-        Log.e("TAG2", "getNews: ")
         tryToExecute(
                 { getNews( HomeUiState.SourceName.entries.map { it.value }) },
                 { onGetNewsSuccess(it) },
@@ -44,6 +43,9 @@ class HomeViewModel(
         updateState { it.copy(news = news.toUiState(), isLoading = false) }
     }
 
+    override fun onRetryNews() {
+        getNews()
+    }
 
      private fun searchForNews(query: String): Flow<PagingData<Article>> {
         searchNewsDataSource.setSearchText(query)
@@ -59,51 +61,9 @@ class HomeViewModel(
         launchSearchJob()
     }
 
-    override fun onClickBookMark(article: ArticleUiState) {
-        if (article.isBookmarked){
-            deleteArticle(article)
-        }else{
-            saveArticle(article)
-        }
-    }
-
-    override fun onRetryNews() {
-        getNews()
-    }
-
-    //save in database and change state to true
-    private fun saveArticle(article: ArticleUiState) {
-        tryToExecute(
-                {  updateArticle.saveArticle(article.toEntity()) },
-                { updateBookmarkStatus(article,true) },
-                ::onError
-        )
-    }
-
-    private fun updateBookmarkStatus(article: ArticleUiState,isBookmarked: Boolean) {
-        updateState { it.copy(
-                articles = state.value.articles.map { articles -> articles.map { articleState->
-                    if (articleState.title == article.title) {
-                        articleState.copy(isBookmarked = isBookmarked)
-                    } else {
-                        articleState
-                    }
-                } }
-        ) }
-    }
-
-    private fun deleteArticle(article: ArticleUiState) {
-        tryToExecute(
-                {  updateArticle.removeArticle(article.toEntity()) },
-                { updateBookmarkStatus(article,false) },
-                ::onError
-        )
-    }
-
-
     private fun onSearch() {
-      updateState { it.copy(isLoading = true, isError = false) }
-      tryToExecute(
+        updateState { it.copy(isLoading = true, isError = false) }
+        tryToExecute(
                 { searchForNews(state.value.keyword.trim()).distinctUntilChanged() },
                 { onSuccess(it) },
                 ::onError
@@ -119,6 +79,60 @@ class HomeViewModel(
         updateState { it.copy(articles =  result.toUIState()) }
         updateState { it.copy( isLoading = false) }
     }
+
+    private fun deleteArticle(article: ArticleUiState) {
+        tryToExecute(
+                {  updateArticle.removeArticle(article.toEntity()) },
+                { updateBookmarkStatus(article,false) },
+                ::onError
+        )
+    }
+
+
+    override fun onClickBookMark(article: ArticleUiState) {
+        if (article.isBookmarked) {
+            updateState { it.copy(showDialog = true, selectedArticle = article) }
+        } else {
+            saveArticle(article)
+        }
+    }
+
+    override fun onClickDeleteFromBookMarked(article: ArticleUiState) {
+        updateState { it.copy(showDialog = false) }
+        deleteArticle(article)
+    }
+
+    override fun dismissDialog() {
+        updateState { it.copy(showDialog = false) }
+    }
+
+
+    private fun saveArticle(article: ArticleUiState) {
+        tryToExecute(
+                {  updateArticle.saveArticle(article.toEntity()) },
+                { updateBookmarkStatus(article,true) },
+                ::onError
+        )
+    }
+    private fun updateBookmarkStatus(article: ArticleUiState,isBookmarked: Boolean) {
+        updateState { it.copy(
+                articles = state.value.articles.map { articles -> articles.map { articleState->
+                    if (articleState.title == article.title) {
+                        articleState.copy(isBookmarked = isBookmarked)
+                    } else {
+                        articleState
+                    }
+                } }
+        ) }
+    }
+
+
+
+
+
+
+
+
 
 
     private fun onError() {

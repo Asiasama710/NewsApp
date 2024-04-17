@@ -20,9 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.asia.newsapp.R
 import com.asia.newsapp.ui.composable.ArticleItem
+import com.asia.newsapp.ui.composable.CustomDialog
 import com.asia.newsapp.ui.composable.ErrorView
 import com.asia.newsapp.ui.composable.Loading
 import com.asia.newsapp.ui.composable.PagingList
@@ -53,88 +56,91 @@ fun HomeScreenContent(
     listener: HomeInteractionListener,
     onClickReadMore: (String) -> Unit
 ) {
-        Column(
+    CustomDialog(
+            state = state.showDialog,
+            message = stringResource(id = R.string.are_u_sure_to_delete_from_book_marck),
+            positiveText = stringResource(id = R.string.yes),
+            onConfirm = { listener.onClickDeleteFromBookMarked(state.selectedArticle) },
+            onCancel = { listener.dismissDialog() },
+            onDismissRequest = { listener.dismissDialog() }
+    )
+    Column(
             modifier = Modifier
                 .statusBarsPadding()
                 .background(Theme.colors.background)
-        ) {
-            SearchTextField(
+    ) {
+        SearchTextField(
                 text = state.keyword,
                 onValueChanged = listener::onSearchValueChanged,
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 8.dp,
-                    bottom = 8.dp
-                )
-            )
-            Divider(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        Divider(
                 color = Color.Transparent,
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(1.dp, ambientColor = Color.LightGray, spotColor = Color.LightGray)
-            )
+        )
 
 
-            val articles = state.articles.collectAsLazyPagingItems()
+        val articles = state.articles.collectAsLazyPagingItems()
 
 
-            if (state.isError) {
-                Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                ) {
-                    ErrorView(onClickRetry = { listener.onRetryNews() })
-                }
+        if (state.isError) {
+            Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+            ) {
+                ErrorView(onClickRetry = { listener.onRetryNews() })
             }
-                if (state.isLoading) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                } else {
-                    if (articles.itemSnapshotList.isEmpty() && state.keyword.isBlank()) {
-                        LazyColumn(
-                                modifier = Modifier.background(Theme.colors.background),
-                                verticalArrangement =  Arrangement.spacedBy(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                contentPadding = PaddingValues(16.dp)
-                        ) {
-                            items(state.news) {
-                                ArticleItem(
-                                        modifier = Modifier.animateItemPlacement(),
-                                        title = it.title,
-                                        description = it.description,
-                                        imageUrl = it.imageUrl,
-                                        isBookmarked = it.isBookmarked,
-                                        author = it.author,
-                                        publishedDate = it.publishedAt,
-                                        onItemClick = { onClickReadMore(it.url) },
-                                        isBookmarkedShow = false
-                                )
-                            }
-                        }
-
-                    }
-                    PagingList(
-                            modifier = Modifier.fillMaxSize(),
-                            data = articles,
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            content = {
-                                items(articles.itemSnapshotList.items) {
-                                    ArticleItem(
-                                            modifier = Modifier.animateItemPlacement(),
-                                            title = it.title,
-                                            description = it.description,
-                                            imageUrl = it.imageUrl,
-                                            isBookmarked = it.isBookmarked,
-                                            author = it.author,
-                                            publishedDate = it.publishedAt,
-                                            onBookmarkedClicked = { listener.onClickBookMark(it) },
-                                            onItemClick = { onClickReadMore(it.url) }
-                                    )
-                                }
-                            }
-                    )
-                }
         }
+        if (state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Loading()
+            }
+        } else {
+            if (articles.itemSnapshotList.isEmpty() && state.keyword.isBlank()) {
+                LazyColumn(
+                        modifier = Modifier.background(Theme.colors.background),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(state.news) {
+                        ArticleItem(
+                                modifier = Modifier.animateItemPlacement(),
+                                title = it.title,
+                                description = it.description,
+                                imageUrl = it.imageUrl,
+                                isBookmarked = it.isBookmarked,
+                                author = it.author,
+                                publishedDate = it.publishedAt,
+                                onItemClick = { onClickReadMore(it.url) },
+                                isBookmarkedShow = false
+                        )
+                    }
+                }
+
+            }
+            PagingList(
+                    modifier = Modifier.fillMaxSize(),
+                    data = articles,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    content = {
+                        items(articles.itemSnapshotList.items) {
+                            ArticleItem(
+                                    modifier = Modifier.animateItemPlacement(),
+                                    title = it.title,
+                                    description = it.description,
+                                    imageUrl = it.imageUrl,
+                                    isBookmarked = it.isBookmarked,
+                                    author = it.author,
+                                    publishedDate = it.publishedAt,
+                                    onBookmarkedClicked = { listener.onClickBookMark(it) },
+                                    onItemClick = { onClickReadMore(it.url) }
+                            )
+                        }
+                    }
+            )
+        }
+    }
 }

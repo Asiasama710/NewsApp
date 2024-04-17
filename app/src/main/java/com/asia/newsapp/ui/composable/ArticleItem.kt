@@ -77,8 +77,7 @@ fun ArticleItem(
                 contentColor = Theme.colors.onPrimary
         )
     ) {
-        Column(modifier = Modifier.noRippleEffect { onItemClick() }
-        ) {
+        Column(modifier = Modifier) {
             Box(modifier = Modifier.height(200.dp)) {
                 Image(
                     painter = rememberAsyncImagePainter(model = imageUrl),
@@ -162,7 +161,7 @@ fun ArticleItem(
                         overflow = TextOverflow.Ellipsis
                 )
                 Row(
-                        modifier = Modifier
+                        modifier = Modifier.noRippleEffect { onItemClick() }
                             .fillMaxWidth()
                             .padding(top = 24.dp),
                         horizontalArrangement = Arrangement.End,

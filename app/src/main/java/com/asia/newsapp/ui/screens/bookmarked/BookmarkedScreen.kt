@@ -16,8 +16,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.asia.newsapp.R
 import com.asia.newsapp.ui.composable.ArticleItem
+import com.asia.newsapp.ui.composable.CustomDialog
 import com.asia.newsapp.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,6 +38,8 @@ fun BookmarkedScreen(
                 navigateTo(BookmarkedUiEffect.NavigateToWebView(url))
             }
     )
+
+
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,6 +49,14 @@ fun BookmarkedScreenContent(
     listener: BookmarkedInteractionListener,
     onClickReadMore: (String) -> Unit
 ) {
+    CustomDialog(
+            state = state.showDialog,
+            message = stringResource(id = R.string.are_u_sure_to_delete_from_book_marck),
+            positiveText = stringResource(id = R.string.yes),
+            onConfirm = { listener.onClickDeleteFromBookMarked(state.selectedArticle) },
+            onCancel = { listener.dismissDialog() },
+            onDismissRequest = { listener.dismissDialog() }
+    )
         LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
