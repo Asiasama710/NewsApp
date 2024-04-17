@@ -4,23 +4,30 @@ package com.asia.newsapp.ui.screens.bookmarked
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.asia.newsapp.R
 import com.asia.newsapp.ui.composable.ArticleItem
 import com.asia.newsapp.ui.composable.CustomDialog
+import com.asia.newsapp.ui.composable.EmptyScreenItem
+import com.asia.newsapp.ui.composable.ErrorView
 import com.asia.newsapp.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,8 +66,9 @@ fun BookmarkedScreenContent(
     )
         LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
                     .statusBarsPadding()
+                    .fillMaxSize()
+
                     .background(Theme.colors.background),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,13 +78,35 @@ fun BookmarkedScreenContent(
             item {
                 Text(
 
-                        text ="Bookmarked",
-                        style = Theme.typography.titleLarge,
+                        text = stringResource(R.string.bookmarked),
+                        style = Theme.typography.headline,
                         color = Theme.colors.contentPrimary,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                )
+                Divider(
+                        color = Color.Transparent,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .shadow(
+                                    1.dp,
+                                    ambientColor = Color.LightGray,
+                                    spotColor = Color.LightGray
+                            )
                 )
             }
-            items(state.articles, key = { article -> article.title }) { news ->
+            if (state.articles.isEmpty()) {
+                item {
+                    Box( modifier = Modifier.fillParentMaxSize(),contentAlignment = Alignment.Center
+                    ) {
+                        EmptyScreenItem(modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxSize())
+                    }
+                }
+            }else{
+                items(state.articles, key = { article -> article.title }) { news ->
                     ArticleItem(
                             modifier = Modifier.animateItemPlacement(),
                             title = news.title,
@@ -89,5 +119,7 @@ fun BookmarkedScreenContent(
                             onItemClick = { onClickReadMore(news.url) }
                     )
                 }
+            }
+
     }
 }

@@ -25,9 +25,9 @@ import com.asia.newsapp.ui.theme.Theme
 @Composable
 fun EmptyScreenItem(
     modifier: Modifier = Modifier,
-    iconRes: Int = R.drawable.search_icon,
+    iconRes: Int = R.drawable.ic_articles,
     title: String = stringResource(R.string.nothing_to_show),
-    description: String = stringResource(R.string.empty_search_description)
+    description: String = stringResource(R.string.empty_bookmarked_description)
 ) {
     Column(
             modifier = modifier.fillMaxSize(),
@@ -35,7 +35,7 @@ fun EmptyScreenItem(
             verticalArrangement = Arrangement.Center
     ) {
         Box(
-                modifier = modifier
+                modifier = Modifier
                     .clip(CircleShape)
                     .background(Theme.colors.border.copy(alpha = 0.5f))
                     .padding(24.dp)
@@ -48,7 +48,7 @@ fun EmptyScreenItem(
             )
         }
         Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
