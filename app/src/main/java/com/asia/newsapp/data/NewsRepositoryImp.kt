@@ -44,6 +44,16 @@ class NewsRepositoryImp(
         }
     }
 
+    override suspend fun getNews(sources: List<String>,page:Int): List<Article> {
+         try {
+            val response = handleApiResponse(service.getNews(sources.joinToString (","), page))
+            return response.articles.map { it.toEntity() }
+
+        }catch (e:Exception){
+            throw NetworkException()
+        }
+    }
+
     override suspend fun saveArticles(articles: Article) {
         articleDao.insertArticle(articles.toArticleEntity())
     }

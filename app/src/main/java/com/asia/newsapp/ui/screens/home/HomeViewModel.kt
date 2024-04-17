@@ -1,5 +1,6 @@
 package com.asia.newsapp.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -8,6 +9,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.asia.newsapp.domain.entity.Article
 import com.asia.newsapp.domain.usecase.BookmarkedArticlesUseCase
+import com.asia.newsapp.domain.usecase.GetNewsUseCase
 import com.asia.newsapp.ui.screens.base.BaseViewModel
 import com.asia.newsapp.ui.util.pagingSource.SearchNewsDataSource
 import kotlinx.coroutines.Job
@@ -19,10 +21,30 @@ import kotlinx.coroutines.flow.map
 
 class HomeViewModel(
     private val searchNewsDataSource: SearchNewsDataSource,
-    private val updateArticle: BookmarkedArticlesUseCase
+    private val updateArticle: BookmarkedArticlesUseCase,
+    private val getNews: GetNewsUseCase
 ) : BaseViewModel<HomeUiState, HomeUiEffect>(HomeUiState()), HomeInteractionListener {
 
     private var searchJob: Job? = null
+    init {
+        getNews()
+    }
+
+    private fun getNews() {
+        updateState { it.copy(isLoading = true,isError = false) }
+        Log.e("TAG2", "getNews: ")
+        tryToExecute(
+                { getNews( HomeUiState.SourceName.entries.map { it.value }) },
+                { onGetNewsSuccess(it) },
+                ::onError
+        )
+    }
+
+    private fun onGetNewsSuccess(news: List<Article>) {
+        updateState { it.copy(news = news.toUiState(), isLoading = false) }
+    }
+
+
      private fun searchForNews(query: String): Flow<PagingData<Article>> {
         searchNewsDataSource.setSearchText(query)
         return Pager(config =  PagingConfig(pageSize = 5), pagingSourceFactory = { searchNewsDataSource }).flow
@@ -43,6 +65,10 @@ class HomeViewModel(
         }else{
             saveArticle(article)
         }
+    }
+
+    override fun onRetryNews() {
+        getNews()
     }
 
     //save in database and change state to true

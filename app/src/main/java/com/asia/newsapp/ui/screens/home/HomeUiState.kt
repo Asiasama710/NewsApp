@@ -13,7 +13,14 @@ data class HomeUiState(
     val isError: Boolean = false,
     val keyword: String = "",
     val articles: Flow<PagingData<ArticleUiState>> = emptyFlow(),
-)
+    val news:List<ArticleUiState> = emptyList()
+){
+    enum class SourceName(val value: String) {
+        BBC("bbc-news"),
+        ABC("abc-news"),
+        ALJAZEERA("al-jazeera-english")
+    }
+}
 
 data class ArticleUiState(
     val title: String,

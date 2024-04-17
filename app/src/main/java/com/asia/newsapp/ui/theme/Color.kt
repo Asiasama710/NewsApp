@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 val TernaryShadesDark = Color(0x6104030A)
 val QuaternaryShadesDark = Color(0x2904030A)
 val BackgroundLight = Color(0xFFF6F7F7)
-val SecondaryLight = Color(0xFFF8CF54)
+val Primary = Color(0xFFB71C1C)
 
 
 data class Colors(
@@ -22,7 +22,7 @@ data class Colors(
 )
 
 val LightColors = Colors(
-        primary = Color(0xFFE5AD06),
+        primary = Primary,
         secondary = Color(0xFFF8CF54),
         onSecondary = Color(0xDEFFFFFF),
         contentPrimary = Color(0xFF222222),
@@ -35,7 +35,7 @@ val LightColors = Colors(
 )
 
 val DarkColors = Colors(
-        primary = Color(0xFFE5AD06),
+        primary = Primary,
         secondary =  Color(0xFFF8CF54),
         onSecondary = Color(0xDEFFFFFF),
         contentPrimary = Color(0xFF222222),

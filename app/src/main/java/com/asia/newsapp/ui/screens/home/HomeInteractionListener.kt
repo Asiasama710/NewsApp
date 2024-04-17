@@ -4,4 +4,6 @@ interface HomeInteractionListener {
     fun onSearchValueChanged(query: String)
     fun onClickBookMark(article: ArticleUiState)
 
+    fun onRetryNews()
+
 }

@@ -5,10 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
@@ -21,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.asia.newsapp.ui.composable.ArticleItem
-import com.asia.newsapp.ui.composable.EmptyScreenItem
+import com.asia.newsapp.ui.composable.ErrorView
 import com.asia.newsapp.ui.composable.Loading
 import com.asia.newsapp.ui.composable.PagingList
 import com.asia.newsapp.ui.composable.SearchTextField
@@ -74,24 +76,51 @@ fun HomeScreenContent(
             )
 
 
-            val news = state.articles.collectAsLazyPagingItems()
+            val articles = state.articles.collectAsLazyPagingItems()
 
-            if (state.keyword.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    EmptyScreenItem()
+
+            if (state.isError) {
+                Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                ) {
+                    ErrorView(onClickRetry = { listener.onRetryNews() })
                 }
-            } else {
+            }
                 if (state.isLoading) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Loading()
                     }
                 } else {
+                    if (articles.itemSnapshotList.isEmpty() && state.keyword.isBlank()) {
+                        LazyColumn(
+                                modifier = Modifier.background(Theme.colors.background),
+                                verticalArrangement =  Arrangement.spacedBy(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                contentPadding = PaddingValues(16.dp)
+                        ) {
+                            items(state.news) {
+                                ArticleItem(
+                                        modifier = Modifier.animateItemPlacement(),
+                                        title = it.title,
+                                        description = it.description,
+                                        imageUrl = it.imageUrl,
+                                        isBookmarked = it.isBookmarked,
+                                        author = it.author,
+                                        publishedDate = it.publishedAt,
+                                        onItemClick = { onClickReadMore(it.url) },
+                                        isBookmarkedShow = false
+                                )
+                            }
+                        }
+
+                    }
                     PagingList(
                             modifier = Modifier.fillMaxSize(),
-                            data = news,
+                            data = articles,
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             content = {
-                                items(news.itemSnapshotList.items) {
+                                items(articles.itemSnapshotList.items) {
                                     ArticleItem(
                                             modifier = Modifier.animateItemPlacement(),
                                             title = it.title,
@@ -107,6 +136,5 @@ fun HomeScreenContent(
                             }
                     )
                 }
-            }
         }
 }

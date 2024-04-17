@@ -64,8 +64,9 @@ fun ArticleItem(
     isBookmarked: Boolean,
     author:String,
     publishedDate:String,
-    onBookmarkedClicked: () -> Unit,
-    onItemClick: () -> Unit
+    onBookmarkedClicked: () -> Unit = {},
+    onItemClick: () -> Unit,
+    isBookmarkedShow: Boolean= true
 ) {
     Card(
         modifier= modifier,
@@ -128,19 +129,21 @@ fun ArticleItem(
 
                     }
 
-
-                    IconButton(
-                        onClick = onBookmarkedClicked,
-                        colors = IconButtonDefaults.iconButtonColors(containerColor = Theme.colors.onPrimary),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Icon(
-                                painter = if (isBookmarked) painterResource(id = R.drawable.ic_bookmarked_selected)
-                                else painterResource(id = R.drawable.ic_bookmarked_unselected),
-                                contentDescription = title,
-                                tint = if (isBookmarked) Theme.colors.primary else Theme.colors.contentTertiary
-                        )
+                    if (isBookmarkedShow){
+                        IconButton(
+                                onClick = onBookmarkedClicked,
+                                colors = IconButtonDefaults.iconButtonColors(containerColor = Theme.colors.onPrimary),
+                                modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            Icon(
+                                    painter = if (isBookmarked) painterResource(id = R.drawable.ic_bookmarked_selected)
+                                    else painterResource(id = R.drawable.ic_bookmarked_unselected),
+                                    contentDescription = title,
+                                    tint = if (isBookmarked) Theme.colors.primary else Theme.colors.contentTertiary
+                            )
+                        }
                     }
+
                 }
             }
             Column(modifier = Modifier.padding(16.dp)) {
