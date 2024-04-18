@@ -15,7 +15,6 @@ abstract class BasePagingSource<Value : Any> : PagingSource<Int, Value>() {
         val limit = params.loadSize
         return try {
             val response = fetchData(currentPage, limit)
-            Log.e("TAG", "load error: $response, response.items: ${response}")
             LoadResult.Page(
                     data = response.items,
                     prevKey = if (currentPage == 1) null else currentPage - 1,
@@ -23,7 +22,6 @@ abstract class BasePagingSource<Value : Any> : PagingSource<Int, Value>() {
             )
 
         } catch (e: Exception) {
-            Log.e("TAG", "load error: $e")
             LoadResult.Error(e)
         }
     }

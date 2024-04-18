@@ -14,7 +14,6 @@ fun NavController.navigateTo(screen: Screen) {
         screen.route.replaceAfter("/", routePath)
     } ?: screen.route
 
-    Log.d("navigation", "navigateTo: ${screen.route}")
 
     navigate(route) {
 
